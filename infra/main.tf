@@ -23,28 +23,6 @@ locals {
   fe_image  = "gcr.io/sic-container-repo/todo-fe"
 }
 
-module "project-services" {
-  source                      = "terraform-google-modules/project-factory/google//modules/project_services"
-  version                     = "13.0.0"
-  disable_services_on_destroy = false
-
-  project_id  = var.project_id
-  enable_apis = var.enable_apis
-
-  activate_apis = [
-    "compute.googleapis.com",
-    "cloudapis.googleapis.com",
-    "vpcaccess.googleapis.com",
-    "servicenetworking.googleapis.com",
-    "cloudbuild.googleapis.com",
-    "sql-component.googleapis.com",
-    "sqladmin.googleapis.com",
-    "storage.googleapis.com",
-    "run.googleapis.com",
-    "redis.googleapis.com",
-  ]
-}
-
 resource "google_service_account" "runsa" {
   project      = var.project_id
   account_id   = "${var.deployment_name}-run-sa"
@@ -146,7 +124,6 @@ resource "google_sql_database_instance" "main" {
     google_service_networking_connection.main
   ]
 }
-
 
 resource "google_sql_user" "main" {
   project         = var.project_id
